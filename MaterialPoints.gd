@@ -1,7 +1,7 @@
 extends Node
 
 var Nds = []  # węzły
-var NUM = 20
+var NUM = 1
 var e = 0.0 # wsp. restytucji
 
 var node_object = load("material_point.tscn")

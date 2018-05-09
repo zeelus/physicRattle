@@ -15,6 +15,7 @@ var is_static = false
 onready var point = $"point"
 onready var arrow = $"point/arrow"
 onready var arrowhead  = $"point/arrowhead"
+onready var grz = $"../../grz"
 var up = Vector3(0.0,1.0,0.0)
 var right = Vector3(1.0,0.0,0.0)
 
@@ -39,7 +40,20 @@ var iter = 0
 
 func _physics_process(delta):
 	if !is_static:
-		verlet(delta)
+		euler(delta)
+		var faces = grz.mesh.get_faces ()
+
+		for i in range(0, faces.size(), 3):
+			var p1 = faces[i]
+			var p2 = faces[i+1]
+			var p3 = faces[i+2]
+			var v1 = p2 - p1
+			var v2 = p3 - p1
+			var n = v1.cross(v2).normalized()
+			var alfa = (-1 * n).dot(p1)
+			var distans = (n.dot(position) + alfa) / n.length()
+			if abs(distans) <= zero_tolerance:
+				is_static = true
 		
 		#var length = (position - sphere.position).length()
 		#if (sphere.radius - (length - 0.1)) >= zero_tolerance:
@@ -92,7 +106,7 @@ func verlet(delta,f=force(delta)):
 	
 func force(delta):
 	#var distance = position - self.sphere.position
-	gravity = Vector3(0,-1,0)
+	gravity = Vector3(0,-0.1,0)
 	#if distance.length() > 0.02:
 	#	gravity = -self.mass*distance*pow(distance.length(),-3)
 	#	viscosity = -0.4*self.velocity
