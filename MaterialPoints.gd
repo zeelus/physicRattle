@@ -1,13 +1,14 @@
 extends Node
 
 var Nds = []  # węzły
-var NUM = 1
+var NUM = 10
 var e = 0.0 # wsp. restytucji
 
 var node_object = load("material_point.tscn")
 onready var sphere = sphere
 
 func _ready():
+	pass
 	create_scene()
 
 func _process(delta):
@@ -42,3 +43,5 @@ func create_scene():
 		new_node.position = r*Vector3(cos(phi)*sin(theta),cos(theta),sin(phi)*sin(theta))
 		Nds.push_back(new_node)
 		add_child(new_node)
+		
+		

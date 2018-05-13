@@ -24,6 +24,7 @@ func _ready():
 	velocity = 0.01*Vector3(2*randf()-1.0,randf(),2*randf()-1.0)
 	
 	# setting positions
+	position = point.translation
 	previous_position = position - velocity * get_physics_process_delta_time()
 	point.global_translate(position)
 	
@@ -42,18 +43,22 @@ func _physics_process(delta):
 	if !is_static:
 		euler(delta)
 		var faces = grz.mesh.get_faces ()
-
+		
 		for i in range(0, faces.size(), 3):
 			var p1 = faces[i]
 			var p2 = faces[i+1]
 			var p3 = faces[i+2]
 			var v1 = p2 - p1
 			var v2 = p3 - p1
-			var n = v1.cross(v2).normalized()
+			var n = v1.cross(v2)
 			var alfa = (-1 * n).dot(p1)
 			var distans = (n.dot(position) + alfa) / n.length()
-			if abs(distans) <= zero_tolerance:
-				is_static = true
+			if distans < 0:
+				if ((p2 - p1).cross((position - p1))).dot(n) >= 0 && \
+					((p1 - p3).cross((position - p3))).dot(n) >= 0 && \
+					((p3 - p2).cross((position - p2))).dot(n) >= 0 :
+						is_static = true
+		
 		
 		#var length = (position - sphere.position).length()
 		#if (sphere.radius - (length - 0.1)) >= zero_tolerance:
