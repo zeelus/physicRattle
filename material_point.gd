@@ -24,7 +24,7 @@ func _ready():
 	velocity = 0.01*Vector3(2*randf()-1.0,randf(),2*randf()-1.0)
 	
 	# setting positions
-	position = point.translation
+	#position = point.translation
 	previous_position = position - velocity * get_physics_process_delta_time()
 	point.global_translate(position)
 	
@@ -41,9 +41,11 @@ var iter = 0
 
 func _physics_process(delta):
 	if !is_static:
-		euler(delta)
-		var faces = grz.mesh.get_faces ()
 		
+		var is_Collisin = false
+		var force = force(delta)
+		
+		var faces = grz.mesh.get_faces ()
 		for i in range(0, faces.size(), 3):
 			var p1 = faces[i]
 			var p2 = faces[i+1]
@@ -54,11 +56,20 @@ func _physics_process(delta):
 			var alfa = (-1 * n).dot(p1)
 			var distans = (n.dot(position) + alfa) / n.length()
 			if distans < 0:
+				var normal = n.normalized()
 				if ((p2 - p1).cross((position - p1))).dot(n) >= 0 && \
 					((p1 - p3).cross((position - p3))).dot(n) >= 0 && \
 					((p3 - p2).cross((position - p2))).dot(n) >= 0 :
-						is_static = true
-		
+						var velocityPro = ((velocity.dot(normal)) / normal.length_squared()) * normal
+						velocity -= (1 + 0.6) * velocityPro
+						var reactForce = ((force.dot(normal)) / normal.length_squared()) * normal
+						force -= reactForce
+						is_Collisin = true
+						
+		if is_Collisin:
+			euler(delta, force)
+		else:
+			verlet(delta)
 		
 		#var length = (position - sphere.position).length()
 		#if (sphere.radius - (length - 0.1)) >= zero_tolerance:
@@ -111,7 +122,7 @@ func verlet(delta,f=force(delta)):
 	
 func force(delta):
 	#var distance = position - self.sphere.position
-	gravity = Vector3(0,-0.1,0)
+	#gravity = Vector3(0,-0.1,0)
 	#if distance.length() > 0.02:
 	#	gravity = -self.mass*distance*pow(distance.length(),-3)
 	#	viscosity = -0.4*self.velocity
