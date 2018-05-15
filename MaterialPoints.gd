@@ -1,11 +1,15 @@
 extends Node
 
 var Nds = []  # węzły
-var NUM = 5
+var NUM = 20
 var e = 0.0 # wsp. restytucji
+
+var isPlay = false
+var deltaFromPlay = 0
 
 var node_object = load("material_point.tscn")
 onready var mass_object = $"Mass"
+onready var ASP = $"ASP"
 onready var sphere = sphere
 
 func _ready():
@@ -15,7 +19,12 @@ func _process(delta):
 	pass
 
 func _physics_process(delta):
-	add_forces()
+	
+	if isPlay && deltaFromPlay > 0.1:
+			ASP.stop()
+		
+	deltaFromPlay += delta
+	
 	for i in range(Nds.size()):
 		for j in range(i):
 			var dist = (Nds[i].position - Nds[j].position)
@@ -33,6 +42,8 @@ func _physics_process(delta):
 				Nds[j].velocity += -Jdmm*mI*n - vJn*n
 				Nds[i].euler(delta)
 				Nds[j].euler(delta)
+				isPlay = true
+				ASP.play()
 				
 func add_forces():
 	for node in Nds:
@@ -50,5 +61,3 @@ func create_scene():
 		new_node.position = r*Vector3(cos(phi)*sin(theta),cos(theta),sin(phi)*sin(theta))
 		Nds.push_back(new_node)
 		add_child(new_node)
-		
-		

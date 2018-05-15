@@ -6,7 +6,7 @@
 [ext_resource path="res://MaterialPoints.gd" type="Script" id=4]
 [ext_resource path="res://Mass.gd" type="Script" id=5]
 
-[sub_resource type="SphereMesh" id=3]
+[sub_resource type="SphereMesh" id=1]
 
 radius = 1.0
 height = 2.0
@@ -80,9 +80,17 @@ _sections_unfolded = [ "Geometry", "LOD", "Transform", "Visibility", "material" 
 
 script = ExtResource( 4 )
 
-[node name="Mass" type="MeshInstance" parent="MaterialPoints" index="0"]
+[node name="ASP" type="AudioStreamPlayer" parent="MaterialPoints" index="0"]
 
-transform = Transform( 0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 5, 0, 0 )
+stream = null
+volume_db = 0.0
+autoplay = false
+mix_target = 0
+bus = "Master"
+
+[node name="Mass" type="MeshInstance" parent="MaterialPoints" index="1"]
+
+transform = Transform( 0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 3, 0, 0 )
 layers = 1
 material_override = null
 cast_shadow = 1
@@ -92,10 +100,10 @@ lod_min_distance = 0.0
 lod_min_hysteresis = 0.0
 lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
-mesh = SubResource( 3 )
+mesh = SubResource( 1 )
 skeleton = NodePath("..")
 material/0 = null
 script = ExtResource( 5 )
-_sections_unfolded = [ "Geometry" ]
+_sections_unfolded = [ "Geometry", "Transform" ]
 
 

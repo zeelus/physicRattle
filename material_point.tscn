@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://material_point.gd" type="Script" id=1]
+[ext_resource path="res://16981_1461335347.ogg" type="AudioStream" id=2]
 
 [sub_resource type="SphereMesh" id=1]
 
@@ -26,7 +27,7 @@ subdivide_width = 0
 subdivide_height = 0
 subdivide_depth = 0
 
-[node name="material_point" type="Node"]
+[node name="material_point" type="Node" index="0"]
 
 script = ExtResource( 1 )
 
@@ -47,7 +48,15 @@ skeleton = NodePath("..")
 material/0 = null
 _sections_unfolded = [ "Transform", "material" ]
 
-[node name="arrow" type="MeshInstance" parent="point" index="0"]
+[node name="ASP" type="AudioStreamPlayer" parent="point" index="0"]
+
+stream = ExtResource( 2 )
+volume_db = 0.0
+autoplay = false
+mix_target = 0
+bus = "Master"
+
+[node name="arrow" type="MeshInstance" parent="point" index="1"]
 
 transform = Transform( 0.2, 0, 0, 0, 10, 0, 0, 0, 0.2, 0, 0, 0 )
 layers = 1
@@ -64,7 +73,7 @@ skeleton = NodePath("..")
 material/0 = null
 _sections_unfolded = [ "Transform", "material" ]
 
-[node name="arrowhead" type="MeshInstance" parent="point" index="1"]
+[node name="arrowhead" type="MeshInstance" parent="point" index="2"]
 
 transform = Transform( 0.6, 0, 0, 0, 1, 0, 0, 0, 0.6, 0, 0, 0 )
 layers = 1

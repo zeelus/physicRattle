@@ -16,8 +16,11 @@ onready var point = $"point"
 onready var arrow = $"point/arrow"
 onready var arrowhead  = $"point/arrowhead"
 onready var grz = $"../../grz"
+onready var ASP = $"point/ASP"
 var up = Vector3(0.0,1.0,0.0)
 var right = Vector3(1.0,0.0,0.0)
+var isPlay = false
+var deltaFromPlay = 0
 
 func _ready():
 	# setting velocity
@@ -61,45 +64,39 @@ func _physics_process(delta):
 				#	((p1 - p3).cross((position - p3))).dot(n) >= 0 && \
 				#	((p3 - p2).cross((position - p2))).dot(n) >= 0 :
 				var velocityPro = ((velocity.dot(normal)) / normal.length_squared()) * normal
-				velocity -= (1 + 0.6) * velocityPro
+				velocity -= (1 + 0.9) * velocityPro
 				var reactForce = ((force.dot(normal)) / normal.length_squared()) * normal
 				force -= reactForce
+				self.position += normal * 0.2
 				is_Collisin = true
 						
 		if is_Collisin:
+			ASP.play()
+			isPlay = true
+			deltaFromPlay = 0
 			euler(delta, force)
 		else:
 			verlet(delta)
 		
-		#var length = (position - sphere.position).length()
-		#if (sphere.radius - (length - 0.1)) >= zero_tolerance:
-		#	var normal = (position - sphere.position).normalized()
-		#	var velocityPro = ((velocity.dot(normal)) / normal.length_squared()) * normal
-		#	velocity -= (1 + O) * velocityPro
-		#	var force = force(delta)
-		#	var reactForce = ((force.dot(normal)) / normal.length_squared()) * normal
-		#	force -= reactForce
-		#	
-		#	euler(delta, force)
-		#else:
-		#	verlet(delta)
-		#	if iter == 100:
-		#		iter = 0
-		#	else:
-		#		iter+=1
+		if isPlay && deltaFromPlay > 0.2:
+			ASP.stop()
 		
+		deltaFromPlay += delta
 
 func _process(delta):
 	if !is_static:
 		point.translation = position
-		arrow.scale = Vector3(0.2,10.0*velocity.length(),0.2)
-		arrow.translation = Vector3(0.0,10.0*velocity.length(),0.0)
-		arrowhead.translation = Vector3(0.0,20.0*velocity.length(),0.0)
-		var axis = up.cross(velocity.normalized())
-		var angle = acos(up.dot(velocity.normalized()))
-		if axis.length() > 1e-3:
-			point.global_rotate(axis.normalized(),angle)
-		up = velocity.normalized()
+		drowVector(velocity)
+		
+func drowVector(vector3):
+	arrow.scale = Vector3(0.2,10.0*vector3.length(),0.2)
+	arrow.translation = Vector3(0.0,10.0*vector3.length(),0.0)
+	arrowhead.translation = Vector3(0.0,20.0*vector3.length(),0.0)
+	var axis = up.cross(vector3.normalized())
+	var angle = acos(up.dot(vector3.normalized()))
+	if axis.length() > 1e-3:
+		point.global_rotate(axis.normalized(),angle)
+		up = vector3.normalized()
 
 func set_velocity(v):
 	velocity          = v
