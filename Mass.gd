@@ -6,7 +6,7 @@ extends MeshInstance
 
 var position = Vector3(0, 0, 0)
 var mass = 100.0
-const gravityConst = 0.001
+const gravityConst = 0.01
 
 
 func _ready():

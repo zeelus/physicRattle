@@ -21,7 +21,7 @@ var right = Vector3(1.0,0.0,0.0)
 
 func _ready():
 	# setting velocity
-	velocity = 0.01*Vector3(2*randf()-1.0,randf(),2*randf()-1.0)
+	velocity = Vector3(0, 0, 0)#0.01*Vector3(2*randf()-1.0,randf(),2*randf()-1.0)
 	
 	# setting positions
 	#position = point.translation
@@ -57,14 +57,14 @@ func _physics_process(delta):
 			var distans = (n.dot(position) + alfa) / n.length()
 			if distans < 0:
 				var normal = n.normalized()
-				if ((p2 - p1).cross((position - p1))).dot(n) >= 0 && \
-					((p1 - p3).cross((position - p3))).dot(n) >= 0 && \
-					((p3 - p2).cross((position - p2))).dot(n) >= 0 :
-						var velocityPro = ((velocity.dot(normal)) / normal.length_squared()) * normal
-						velocity -= (1 + 0.6) * velocityPro
-						var reactForce = ((force.dot(normal)) / normal.length_squared()) * normal
-						force -= reactForce
-						is_Collisin = true
+				#if ((p2 - p1).cross((position - p1))).dot(n) >= 0 && \
+				#	((p1 - p3).cross((position - p3))).dot(n) >= 0 && \
+				#	((p3 - p2).cross((position - p2))).dot(n) >= 0 :
+				var velocityPro = ((velocity.dot(normal)) / normal.length_squared()) * normal
+				velocity -= (1 + 0.6) * velocityPro
+				var reactForce = ((force.dot(normal)) / normal.length_squared()) * normal
+				force -= reactForce
+				is_Collisin = true
 						
 		if is_Collisin:
 			euler(delta, force)

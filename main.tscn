@@ -1,69 +1,12 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Camera.gd" type="Script" id=1]
-[ext_resource path="res://grz.obj" type="ArrayMesh" id=2]
-[ext_resource path="res://MaterialPoints.gd" type="Script" id=3]
-[ext_resource path="res://MeshInstance.gd" type="Script" id=4]
+[ext_resource path="res://untitled.obj" type="ArrayMesh" id=2]
+[ext_resource path="res://transparent.tres" type="Material" id=3]
+[ext_resource path="res://MaterialPoints.gd" type="Script" id=4]
+[ext_resource path="res://Mass.gd" type="Script" id=5]
 
-[sub_resource type="Shader" id=2]
-
-code = "shader_type spatial;
-render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_lambert,specular_phong;
-uniform vec4 albedo : hint_color;
-uniform sampler2D texture_albedo : hint_albedo;
-uniform float specular;
-uniform float metallic;
-uniform float roughness : hint_range(0,1);
-uniform float point_size : hint_range(0,128);
-uniform sampler2D texture_metallic : hint_white;
-uniform vec4 metallic_texture_channel;
-uniform sampler2D texture_roughness : hint_white;
-uniform vec4 roughness_texture_channel;
-uniform vec3 uv1_scale;
-uniform vec3 uv1_offset;
-uniform vec3 uv2_scale;
-uniform vec3 uv2_offset;
-
-
-void vertex() {
-	UV=UV*uv1_scale.xy+uv1_offset.xy;
-}
-
-
-
-
-void fragment() {
-	vec2 base_uv = UV;
-	vec4 albedo_tex = texture(texture_albedo,base_uv);
-	ALBEDO = albedo.rgb * albedo_tex.rgb;
-	float metallic_tex = dot(texture(texture_metallic,base_uv),metallic_texture_channel);
-	METALLIC = metallic_tex * metallic;
-	float roughness_tex = dot(texture(texture_roughness,base_uv),roughness_texture_channel);
-	ROUGHNESS = roughness_tex * roughness;
-	SPECULAR = specular;
-	ALPHA = albedo.a * albedo_tex.a;
-}
-"
-_sections_unfolded = [ "Resource" ]
-
-[sub_resource type="ShaderMaterial" id=3]
-
-render_priority = 0
-shader = SubResource( 2 )
-shader_param/albedo = Color( 0.607726, 0.544471, 0.466667, 0.287294 )
-shader_param/specular = null
-shader_param/metallic = null
-shader_param/roughness = null
-shader_param/point_size = null
-shader_param/metallic_texture_channel = null
-shader_param/roughness_texture_channel = null
-shader_param/uv1_scale = null
-shader_param/uv1_offset = null
-shader_param/uv2_scale = null
-shader_param/uv2_offset = null
-_sections_unfolded = [ "shader_param" ]
-
-[sub_resource type="SphereMesh" id=1]
+[sub_resource type="SphereMesh" id=3]
 
 radius = 1.0
 height = 2.0
@@ -130,12 +73,12 @@ lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
 mesh = ExtResource( 2 )
 skeleton = NodePath("..")
-material/0 = SubResource( 3 )
+material/0 = ExtResource( 3 )
 _sections_unfolded = [ "Geometry", "LOD", "Transform", "Visibility", "material" ]
 
 [node name="MaterialPoints" type="Node" parent="." index="2"]
 
-script = ExtResource( 3 )
+script = ExtResource( 4 )
 
 [node name="Mass" type="MeshInstance" parent="MaterialPoints" index="0"]
 
@@ -149,10 +92,10 @@ lod_min_distance = 0.0
 lod_min_hysteresis = 0.0
 lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
-mesh = SubResource( 1 )
+mesh = SubResource( 3 )
 skeleton = NodePath("..")
 material/0 = null
-script = ExtResource( 4 )
-_sections_unfolded = [ "Geometry", "LOD", "Transform" ]
+script = ExtResource( 5 )
+_sections_unfolded = [ "Geometry" ]
 
 
