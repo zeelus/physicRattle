@@ -51,7 +51,8 @@ func _physics_process(delta):
 		var is_Collisin = false
 		var force = force(delta)
 		
-		var faces = grz.mesh.get_faces ()
+		#var faces = grz.mesh.get_faces ()
+		var faces = grz.faces
 		for i in range(0, faces.size(), 3):
 			var p1 = faces[i]
 			var p2 = faces[i+1]
@@ -67,10 +68,11 @@ func _physics_process(delta):
 				#	((p1 - p3).cross((position - p3))).dot(n) >= 0 && \
 				#	((p3 - p2).cross((position - p2))).dot(n) >= 0 :
 				var velocityPro = ((velocity.dot(normal)) / normal.length_squared()) * normal
-				velocity -= (1 + 0.9) * velocityPro
+				var velocityGrz = ((grz.velocity.dot(normal)) / normal.length_squared()) * normal
+				velocity -= (1 + 0.9) * velocityPro - velocityGrz
 				var reactForce = ((force.dot(normal)) / normal.length_squared()) * normal
 				force -= reactForce
-				self.position += normal * 0.01
+				self.position += normal * 0.1
 				is_Collisin = true
 						
 		if is_Collisin:
