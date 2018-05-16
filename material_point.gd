@@ -15,7 +15,10 @@ var is_static = false
 onready var point = $"point"
 onready var arrow = $"point/arrow"
 onready var arrowhead  = $"point/arrowhead"
+onready var arrow2 = $"point/arrow"
+onready var arrowhead2  = $"point/arrowhead"
 onready var grz = $"../../grz"
+onready var label = $"../../label"
 onready var ASP = $"point/ASP"
 var up = Vector3(0.0,1.0,0.0)
 var right = Vector3(1.0,0.0,0.0)
@@ -67,7 +70,7 @@ func _physics_process(delta):
 				velocity -= (1 + 0.9) * velocityPro
 				var reactForce = ((force.dot(normal)) / normal.length_squared()) * normal
 				force -= reactForce
-				self.position += normal * 0.2
+				self.position += normal * 0.01
 				is_Collisin = true
 						
 		if is_Collisin:
@@ -86,9 +89,18 @@ func _physics_process(delta):
 func _process(delta):
 	if !is_static:
 		point.translation = position
-		drowVector(velocity)
+		
+		if label.drowState == label.DrowStates.velocity:
+			drowVector(velocity)
+		if label.drowState == label.DrowStates.force:
+			drowVector(gravity)
+		if label.drowState == label.DrowStates.none:
+			hideVector()
+			
 		
 func drowVector(vector3):
+	arrow.visible = true
+	arrowhead.visible = true
 	arrow.scale = Vector3(0.2,10.0*vector3.length(),0.2)
 	arrow.translation = Vector3(0.0,10.0*vector3.length(),0.0)
 	arrowhead.translation = Vector3(0.0,20.0*vector3.length(),0.0)
@@ -97,7 +109,11 @@ func drowVector(vector3):
 	if axis.length() > 1e-3:
 		point.global_rotate(axis.normalized(),angle)
 		up = vector3.normalized()
-
+		
+func hideVector():
+	arrow.visible = false
+	arrowhead.visible = false
+	
 func set_velocity(v):
 	velocity          = v
 	previous_position = position - velocity * get_physics_process_delta_time()

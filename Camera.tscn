@@ -2,7 +2,7 @@
 
 [ext_resource path="res://untitled.obj" type="ArrayMesh" id=1]
 
-[node name="Camera" type="Camera" index="0"]
+[node name="Camera" type="Camera"]
 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4 )
 keep_aspect = 1
